@@ -1,6 +1,6 @@
 ---
 id: overview
-title: Releases Overview
+title: "Releases Overview"
 sidebar_position: 1
 ---
 

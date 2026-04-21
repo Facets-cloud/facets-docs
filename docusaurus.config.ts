@@ -82,7 +82,7 @@ const config: Config = {
         {
           title: 'Platform',
           items: [
-            {label: 'Getting Started', to: '/getting-started/overview'},
+            {label: 'What is Facets?', to: '/introduction/what-is-facets'},
             {label: 'CI/CD', to: '/cicd/overview'},
             {label: 'Releases', to: '/releases/overview'},
           ],

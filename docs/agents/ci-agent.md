@@ -1,6 +1,6 @@
 ---
 id: ci-agent
-title: CI Agent
+title: "CI Agent"
 sidebar_position: 1
 ---
 

@@ -1,6 +1,6 @@
 ---
 id: overview
-title: Facets Intelligence Overview
+title: "Facets Intelligence Overview"
 sidebar_position: 1
 ---
 

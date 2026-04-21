@@ -1,6 +1,6 @@
 ---
 id: parallel-releases
-title: Parallel Releases
+title: "Parallel Releases"
 sidebar_position: 1
 ---
 
