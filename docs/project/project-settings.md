@@ -6,29 +6,13 @@ sidebar_position: 4
 
 # Project Settings
 
-Project Settings give you control over the core configuration of a project — including its description, infrastructure type, GitOps integration, CI/CD pipeline, and deletion. Access settings through the **Settings** sidebar within any project.
-
-The Settings sidebar contains five sections:
-
-| Section | Purpose |
-|---|---|
-| **General** | Edit description, project type, and test project flag |
-| **GitOps** | Configure the Git repository backing the blueprint |
-| **CI/CD** | Configure and reset the project-level CI/CD pipeline |
-| **Delivery Pipeline** | View the release promotion flow across environments |
-| **Danger Zone** | Permanently delete the project |
-
-> **Note:** Editing General Settings and GitOps requires **StackWritePermission**. Resetting CI/CD requires **ARTIFACT_CI_WRITE** permission. Deleting a project requires **StackDeletePermission**.
-
-> **Tip:** You can also manage project settings programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
+Project Settings give you control over the core configuration of a project. Access settings from the project sidebar. The sidebar contains five sections: **General**, **GitOps**, **CI/CD**, **Delivery Pipeline**, and **Danger Zone**. All settings are scoped to the current project and require appropriate permissions to modify.
 
 ---
 
 ## General settings
 
-General settings let you update the project description, change the project type, and control whether the project is treated as a test project.
-
-> **Note:** The blueprint name (project identifier) is read-only after creation. It cannot be changed.
+General settings let you update the project type and description. The project name is locked after creation and cannot be changed.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
@@ -36,87 +20,95 @@ General settings let you update the project description, change the project type
 
 To edit general settings:
 
-1. Navigate to your project and click **Settings** in the sidebar.
+1. Open your project and click **Settings** in the project sidebar.
 2. Select **General**.
-3. Update any of the following fields:
+3. Update any of the following editable fields:
+   - **Project Type** — The IaC tool and version associated with the project. Changing this updates the tool inherited by the project.
    - **Description** — A free-text description of the project.
-   - **Project Type** — Select from the project types defined in OpsCenter. Changing the project type automatically updates the IaC tool and version associated with the project.
-   - **Preview Modules Allowed** — Toggle this on to mark the project as a test project. Test projects appear under the **Test Projects** tab on the Projects listing page.
-4. Click **Save**.
+4. Review the following read-only fields:
+   - **Project Name** — Locked after creation and displayed with a lock icon. This cannot be changed.
+   - **IaC Tool** — Inherited from the selected Project Type (Terraform or OpenTofu). This is read-only per project. The OpenTofu version field appears only when the project type uses OpenTofu.
+5. Click **Save** to apply your changes.
+
+> **Note:** Saving General settings requires the **STACK_WRITE** permission. If you lack this permission, the save action shows: "You do not have permission to modify project settings."
+
+> **Note:** If the project fails to load, an **Error Loading Project** alert displays the server error message.
+
+---
+
+## GitOps settings
+
+The **GitOps** section connects the project to a Git repository for blueprint and override management.
+
+Navigate to **Settings** > **GitOps** to configure the VCS repository, branch, relative path, and override settings.
+
+For full configuration steps, see [GitOps for Overrides](./gitops-for-overrides.md).
 
 ---
 
 ## CI/CD settings
 
-The CI/CD settings page lets you configure the project-level CI/CD pipeline, including promotion rules and workflow definitions.
+The **CI/CD** section lets you view, configure, or reset the project-level CI/CD rules and promotion workflows.
 
-Navigate to **Settings > CI/CD** to configure the pipeline. For full pipeline configuration details, see the [CI/CD documentation](../cicd/overview.md).
+Navigate to **Settings** > **CI/CD** to configure the pipeline.
 
-A **Reset** option is available to revert the CI/CD configuration to its defaults. Reset requires **ARTIFACT_CI_WRITE** permission.
+Key behaviors:
+
+- A 404 response from the server is treated as "not yet configured" — the section shows an empty state with an option to configure. This is not an error.
+- The **Reset** option removes all CI rules and workflow IDs from the project.
+
+> **Warning:** Resetting CI/CD configuration removes all CI rules and workflow IDs from the project. This action requires the **ARTIFACT_CI_WRITE** permission and cannot be undone.
+
+For full CI/CD pipeline configuration details, see the CI/CD documentation.
 
 ---
 
 ## Delivery Pipeline
 
-The Delivery Pipeline section shows the configured promotion sequence for releases across environments within the project. This is a read-only view.
+The **Delivery Pipeline** section configures staged rollouts across environments within a project.
 
-Navigate to **Settings > Delivery Pipeline** to see the promotion flow.
+Navigate to **Settings** > **Delivery Pipeline** to view and configure the promotion sequence. Detailed coverage is in the Delivery Pipeline documentation.
 
 ---
 
 ## Deleting a project
 
-Deleting a project is permanent and cannot be undone. Before deletion is allowed, all environments under the project must be removed.
+Deleting a project permanently removes all configuration, variables, GitOps settings, and deployment history. This action cannot be undone.
 
-```mermaid
-flowchart TD
-    A[Click Delete in Danger Zone] --> B{Environments exist?}
-    B -->|Yes| C[Block deletion\nDelete all environments first]
-    B -->|No| D[Show confirmation modal]
-    D --> E[Type confirm]
-    E --> F[Facets removes project resources\nand soft-deletes the record]
-```
-*Figure: Deletion guard — environments must be removed before a project can be deleted*
+> **Warning:** Deletion is permanent and irreversible. All project configuration, variables, GitOps settings, and deployment history are removed.
 
-> **Warning:** Deleting a project is permanent. It cannot be undone. Ensure you have removed all environments and backed up any configuration you need before proceeding.
+:::info Interactive Demo
+*An interactive walkthrough for this flow will be added here.*
+:::
 
 To delete a project:
 
-1. Navigate to your project and click **Settings** in the sidebar.
+1. Open your project and click **Settings** in the project sidebar.
 2. Select **Danger Zone**.
-3. Review the warning. Confirm that all environments under this project have been deleted. If any environments remain, deletion is blocked with the message: "All environments must be deleted before the project can be deleted."
-4. Click **Delete Project** to open the confirmation modal.
-5. Type `confirm` in the confirmation field.
-6. Click **Confirm Delete**.
+3. Click **Delete Project**.
+4. A confirmation modal appears with the message: "This action will permanently delete the project ... and cannot be undone."
+5. Type `confirm` (lowercase, exactly as shown) in the confirmation field.
+6. Click the delete button to proceed.
 
-On success, Facets cleans up temporary checkout files, removes cluster resources, removes the project from all user groups, and soft-deletes the project record.
+> **Note:** If the deletion fails, the modal stays open. Do not dismiss it — check for error messages and retry.
 
 ---
 
-## Permissions summary
+## Permissions
 
 | Action | Required permission |
 |---|---|
-| Edit General Settings | StackWritePermission |
+| Save General settings | STACK_WRITE |
+| Create environments | STACK_WRITE |
 | Reset CI/CD configuration | ARTIFACT_CI_WRITE |
-| Delete project | StackDeletePermission |
-| Delete override fields | OverrideFieldDeletionPermission |
+| Delete project | Admin-level action (enforced on the backend) |
 
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---|---|
-| Deletion blocked with "All environments must be deleted before the project can be deleted." | Delete every environment under the project first, then retry deletion. |
-| Project not found — "Blueprint not found: `{stackName}`" | Verify the project name is correct and that you have access to it. |
-| Unauthorized action | Confirm your account has the required permission for the action. See the permissions table above. |
-| Save blocked in General Settings | Confirm that StackWritePermission is granted for your account. |
+> **Note:** The **Delete Project** action has no explicit frontend permission check beyond the confirmation phrase. Access is enforced as an admin-level action on the backend.
 
 ---
 
 ## Related Topics
 
-- [Project Overview](./overview.md) — Environment list, blueprint preview, and quick actions
-- [Creating a Project](./creating-a-project.md) — Project creation form and options
-- [GitOps for Overrides](./gitops-for-overrides.md) — Git repository integration and override configuration
+- [GitOps for Overrides](./gitops-for-overrides.md) — Full GitOps configuration walkthrough
+- [Project Overview](./overview.md) — The main project dashboard
+- [Creating a Project](./creating-a-project.md) — Initial project setup

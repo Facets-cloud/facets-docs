@@ -4,19 +4,9 @@ title: GitOps for Overrides
 sidebar_position: 3
 ---
 
-# GitOps for Overrides
+GitOps for Overrides connects a project to a Git repository so that environment-specific configuration overrides are stored in and driven from Git. This is a separate Git source from the main blueprint repository — it is used exclusively for per-environment configuration overrides.
 
-GitOps connects your project blueprint to a Git repository, making the repository the source of truth for your infrastructure configuration. Git Overrides extends this by adding a separate Git source specifically for override configurations — keeping environment-specific changes isolated from the main blueprint.
-
-## Overview
-
-When GitOps is enabled, every change to the blueprint is backed by a Git commit. The branch you configure becomes the authoritative source for the project's state.
-
-Git Overrides is a secondary feature within GitOps. It points to a separate repository or branch for override configurations, independent of the main blueprint repository. The **UI Overrides** toggle controls whether changes made through the UI are written back to the override repository.
-
-You can enable GitOps at project creation or at any time afterward via **Settings > GitOps**.
-
-> **Tip:** You can also perform GitOps configuration programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
+When GitOps is active, you can choose how overrides reach environments: through commits to the override repository, through the Facets UI, or both. The **UI Overrides Allowed** toggle controls whether the Facets UI can write overrides alongside the Git source.
 
 ## Prerequisites
 
@@ -29,81 +19,75 @@ You can enable GitOps at project creation or at any time afterward via **Setting
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-```mermaid
-flowchart TD
-    A[Open Project Settings > GitOps] --> B[Toggle GitOps on]
-    B --> C[Fill in repository fields]
-    C --> D[Save settings]
-    D --> E[Platform registers Git-backed project]
-    E --> F[Blueprint is now Git-backed]
-```
-*Figure: How enabling GitOps connects your project to a Git repository*
-
-1. Navigate to your project and open **Settings** from the sidebar.
-2. Select **GitOps** from the settings navigation.
-3. Toggle **GitOps** on.
+1. Navigate to **Project Settings** → **GitOps**.
+2. If GitOps has not been enabled before, the **Enable GitOps** toggle is visible. Toggle it on.
+3. Once GitOps is enabled, the toggle is hidden. You will see only the configuration fields going forward.
 4. Fill in the following fields:
+   - **VCS Account** — the Git provider account to use
+   - **Repository URL** — the full URL of the repository
+   - **Branch** — the branch to track
+   - **Relative Path** — the path within the repository where override files live
+5. Click **Save**. The save button is active only when at least one field differs from its currently saved value.
 
-   | Field | Description |
-   |---|---|
-   | **VCS Account** | The connected version-control account to use. Required before you can save. |
-   | **Repository URL** | The URL of the Git repository backing the blueprint. |
-   | **Branch** | The branch to use as the source of truth. |
-   | **Relative Path** | The path within the repository where the blueprint files live. Leave blank if the blueprint is at the repository root. |
-
-5. Click **Save**.
-
-The platform registers the repository connection. The branch you specified becomes the source of truth for the project blueprint.
-
-> **Note:** The **VCS Account** field is required. If it is not selected, the form blocks saving with an inline validation message.
+> **Note:** If you open the GitOps settings and the **Enable GitOps** toggle is not visible, GitOps is already enabled for this project. Proceed directly to configuring the fields.
 
 ## Configuring Git Overrides
 
-Git Overrides lets you store override configurations in a separate repository or branch, keeping environment-specific changes isolated from the main blueprint.
+Git Overrides use a dedicated override repository that is separate from the main VCS repository configured above.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-1. On the **GitOps** settings page, locate the **Git Overrides** section.
+1. In the GitOps settings page, scroll to the **Git Overrides** section.
 2. Toggle **Git Overrides** on.
-3. Fill in the following fields:
+3. Enter the **Override Repository URL**.
+4. Enter the **Override Branch**.
+5. Optionally toggle **UI Overrides Allowed** to control whether environment overrides can also be submitted through the Facets UI in addition to the Git source.
+6. Click **Save**.
 
-   | Field | Description |
-   |---|---|
-   | **Override Repository URL** | The URL of the repository holding override configurations. |
-   | **Override Branch** | The branch within the override repository to use. |
+The diagram below shows both paths by which overrides can reach an environment:
 
-4. If you want UI changes to override configurations to write back to the override repository automatically, toggle **UI Overrides** on.
-5. Click **Save**.
+```mermaid
+flowchart TD
+    A{UI Overrides Allowed?} -->|Yes| B[User edits override in Facets UI]
+    A -->|Either way| C[Commit to override branch in Git]
+    B --> D[Override written directly]
+    C --> E[Facets syncs override repository]
+    E --> D
+    D --> F[Environment config updated]
+```
 
-> **Note:** The Git Overrides repository is independent of the main blueprint repository. You can use a different repository, a different branch of the same repository, or a different path.
+*Figure: Two paths for delivering overrides — Git-driven and UI-driven. The UI Overrides Allowed toggle determines whether both paths are active or only Git.*
 
-## Migration Status
+> **Tip:** Use Git Overrides when you want a full audit trail for configuration changes. Enable **UI Overrides Allowed** only when ad-hoc changes from the UI are also acceptable.
 
-The GitOps settings page displays the current migration status of the project's GitOps configuration. This is relevant when a project is transitioning from a non-GitOps state to a fully Git-backed state. No action is required unless the status shows an error.
+## Dirty-State Tracking
 
-## Syncing with Git
+GitOps settings track changes field by field. The **Save** button becomes active only when at least one field differs from the currently saved value.
 
-After GitOps is enabled, use **Sync with Git** on the project overview page to pull the latest state from the repository.
+Fields tracked for dirty state:
 
-The sync runs in two stages:
+- Branch
+- Relative Path
+- VCS Account
+- Repository URL
+- Git Overrides toggle
+- UI Overrides Allowed toggle
+- Override Repository URL
+- Override Branch
+- Organization Name
 
-1. The platform syncs the project blueprint synchronously.
-2. It then triggers an asynchronous sync across all environments within the project.
+If you navigate away without saving, unsaved changes are discarded.
 
-For full details on triggering and monitoring a sync, see [Project Overview — Syncing a Project with Git](./overview.md#syncing-a-project-with-git).
+## How Blueprint Variables Are Synced from Git
 
-## Troubleshooting
+When GitOps is active, the platform reads a StackFile — a JSON file in the Git repository — to sync variable definitions, cluster variable metadata, and enabled child stacks (substacks and plugins) into the project. Any changes to this file in Git are reflected in the project's variables and substack composition.
 
-| Problem | Cause | Resolution |
-|---|---|---|
-| **Save is blocked on the GitOps settings page** | VCS Account not selected | Select a VCS Account from the dropdown before saving. |
-| **Git sync fails during project load** | Repository access error or invalid credentials | Verify the repository URL is correct and the VCS account has read access to the repository. |
-| **GitOps toggle appears off despite being enabled previously** | The toggle reflects the active state set by the user, not the model default | Check the GitOps settings page directly and toggle GitOps back on if needed. |
+This sync keeps the blueprint's variable definitions in Git as the source of truth. Variables and secrets counts shown on the Project Overview are computed from this synced metadata.
 
 ## Related Topics
 
-- [Project Overview](./overview.md) — Blueprint preview, environment actions, and syncing with Git
-- [Creating a Project](./creating-a-project.md) — Configure GitOps at project creation time
-- [Project Settings](./project-settings.md) — Full reference for all project settings sections
+- [Project Settings](./project-settings.md) — full settings panel including GitOps, CI/CD, and Danger Zone
+- [Project Overview](./overview.md) — environment-level actions including Release and Launch
+- [Variables and Secrets](../secrets/overview.md) — how variable counts are surfaced from synced metadata

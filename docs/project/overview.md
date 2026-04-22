@@ -4,143 +4,139 @@ title: Project Overview
 sidebar_position: 1
 ---
 
-A Project is the top-level organizational unit in Facets. It holds your infrastructure blueprint, all environments, resources, variables, and configuration in one place.
+The Project Overview is the main dashboard for a project. It shows the project's infrastructure blueprint, resource and environment actions, and a summary of key metrics. This page appears after you open any project from the Projects listing.
 
-## What you see on the Projects page
+## What the Overview Shows
 
-The Projects listing page organizes all your projects into three tabs:
+The Overview gives you a snapshot of your project at a glance:
 
-| Tab | What it shows |
-|---|---|
-| **Projects** | Active projects you have access to |
-| **Test Projects** | Projects with Preview Modules enabled |
-| **Templates** | Projects saved as reusable templates |
+- **Total resources** — all resources defined in the blueprint
+- **Disabled resources** — resources currently toggled off in the blueprint
+- **Variables count** — variable entries in the project's variable metadata
+- **Secrets count** — variable entries marked as secrets
 
-Use the search bar to filter by name. Use the sort controls to order by name or last modified date.
+> **Note:** Variables and secrets counts are computed from the project's variable metadata. Entries flagged as secret count toward the secrets total; all others count as variables.
 
-## Project overview page
-
-When you navigate into a project, the overview page gives you a summary of the project's state and quick access to environment actions.
-
-### Blueprint preview
-
-The blueprint preview is a read-only node graph showing all resources in the project and the connections between them. It reflects the current state of the blueprint.
+The page is divided into three main areas: **Blueprint**, **Resource Actions**, and **Environment Actions**. On load, the Overview automatically selects the first available resource and the first available environment to pre-populate both action panels.
 
 ```mermaid
-graph LR
-    BP[Blueprint Preview] -->|renders| R1[Resource A]
-    BP -->|renders| R2[Resource B]
-    BP -->|renders| R3[Resource C]
-    R1 -->|connected to| R3
-    R2 -->|connected to| R3
+graph TD
+    A[Project Overview] --> B[Blueprint Panel]
+    A --> C[Resource Actions Panel]
+    A --> D[Environment Actions Panel]
+    A --> E[Summary Stats]
+
+    B --> B1[Visual infrastructure preview]
+    B --> B2[Entry point to Blueprint Designer]
+
+    C --> C1[Actions scoped to selected resource]
+    D --> D1[Actions scoped to selected environment]
+
+    E --> E2[Total resources]
+    E --> E3[Disabled resources]
+    E --> E4[Variables count]
+    E --> E5[Secrets count]
 ```
-*Figure: The blueprint preview renders all project resources and their connections as a read-only node graph*
+*Figure: How the four areas of the Project Overview relate to each other*
 
-> **Tip:** To edit the blueprint, open the Blueprint Designer from the project. The overview shows a read-only preview only.
+---
 
-### Environment list
+## Blueprint Panel
 
-Below the blueprint preview, the overview shows all environments in the project. Each environment entry displays:
+The **Blueprint** panel shows a visual preview of the project's infrastructure graph. It reflects the current state of the blueprint on the default branch.
 
-| Field | Description |
-|---|---|
-| Cloud provider | The cloud the environment runs on |
-| Release stream | The stream governing how deployments are promoted |
-| Status | Current environment status |
-| Next release time | Scheduled time for the next release |
+To open the full Blueprint Designer — where you can add, connect, and configure resources visually — click anywhere on the blueprint preview.
 
-### Stats cards
-
-Two stats cards appear at the top of the overview:
-
-- **Resources** — total number of blueprint resources in the project
-- **Secrets / Variables** — total count of project-level variables and secrets
-
-### Quick-action buttons
-
-Each environment in the list has the following action buttons:
-
-| Action | What it does |
-|---|---|
-| **Override Config** | Opens the override configuration for the environment |
-| **Release** | Triggers a release for the environment |
-| **Live Page** | Opens the live environment dashboard |
-| **Kube Access** | Retrieves Kubernetes credentials for the environment |
-
-### Pause and resume releases
-
-Each environment has a toggle to pause or resume releases. Pausing prevents new releases from being applied to that environment. Resuming restores the normal release schedule.
-
-> **Note:** Pausing releases requires the **PauseReleasesStackPermission** role.
-
-### Create an environment from the overview
-
-You can add an environment without leaving the project overview.
+To add your first resource to an empty blueprint, click **Add Resource** (or **Define a resource** if the blueprint is empty).
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-1. On the project overview page, click **Create Environment**.
-2. Enter an **Environment Name**. The name must:
-   - Start with a lowercase letter
-   - Contain only lowercase letters, numbers, and hyphens
-   - Be between 1 and 40 characters
-3. Select a **Release Stream** for the environment.
-4. Click **Create** to add the environment.
+---
 
-The new environment appears in the environment list immediately.
+## Resource Actions
 
-### Praxis AI assistant
+The **Resource Actions** panel lists actions available for the currently selected resource. Select a different resource from the panel to switch context.
 
-The **Try Praxis** button on the project overview opens Praxis, an AI assistant scoped to the project. Use Praxis to ask questions about the project's infrastructure, resources, and configuration.
-
-## Project sidebar navigation
-
-Within a project, the left sidebar gives you access to all project sections:
-
-| Section | What it contains |
+| Action | What It Does |
 |---|---|
-| **Overview** | The project overview page |
-| **Environments** | A cascader popover listing all environments with environment-level navigation |
-| **Resources** | Blueprint resource list and per-resource configuration |
-| **Variables** | Project-level variables and secrets (secret values are always masked as `****`) |
-| **Cost** | Cost view for the project |
+| **Edit Config** | Opens the resource configuration editor |
+| **Enable** / **Disable** | Toggles the resource on or off in the blueprint (applies at the blueprint level on the default branch) |
+| **Image Update** | Updates the container image for resources that have CI artifacts attached |
+| **Override** | Overrides the resource's configuration for the selected environment only — does not affect the default blueprint |
+| **Live Page** | Opens the live monitoring view for the resource |
 
-## Saving a project as a template
+> **Note:** The Overview selects the first available resource automatically when the page loads.
 
-Any project can be saved as a template. Saved templates appear under the **Templates** tab on the Projects listing page and can be selected as the basis for new projects during creation.
+---
 
-> **Note:** Saving a project as a template requires the **BlueprintTemplateWritePermission** role.
+## Environment Actions
 
-## Syncing a project with Git
+The **Environment Actions** panel lists actions available for the currently selected environment. Use the dropdown to switch between environments.
 
-When a project is backed by a Git repository, use **Sync with Git** to pull the latest state from the repository. Sync first updates the project synchronously, then triggers an asynchronous sync across all environments.
+| Action | What It Does | Permission Required |
+|---|---|---|
+| **Release** | Triggers a full release for the selected environment | `RELEASE_FULL` |
+| **Launch** | Launches the selected environment | `ENVIRONMENT_LAUNCH` |
+| **Renew** | Refreshes Kubernetes credentials for the environment (credentials are valid for 24 hours) | `K8S_CREDENTIALS` |
+| **Download kubeconfig** | Downloads a personal kubeconfig file for the selected environment | `K8S_CREDENTIALS` |
+| **New Environment** | Opens the New Environment drawer to add an environment to the project | `STACK_WRITE` |
 
-```mermaid
-flowchart TD
-    A[User clicks Sync with Git] --> B[Synchronous project sync]
-    B --> C{Sync successful?}
-    C -->|Yes| D[Async sync triggered for all environments]
-    C -->|No| E[Error logged and surfaced]
-    D --> F[Each environment synced independently]
-```
-*Figure: Sync with Git first completes a synchronous project sync, then fans out asynchronous syncs to each environment*
+> **Note:** **Renew** and **Download kubeconfig** are disabled when the environment is in `STOPPED`, `DESTROY_FAILED`, or `LAUNCH_FAILED` state, or when the environment has no Kubernetes cluster or credentials.
 
-> **Tip:** You can also perform this operation programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
+> **Note:** Kubeconfig files expire after 24 hours. Use **Renew** to refresh the credentials before downloading a new file.
+
+> **Note:** The Overview selects the first available environment automatically when the page loads.
+
+---
+
+## Creating a New Environment from the Overview
+
+:::info Interactive Demo
+*An interactive walkthrough for this flow will be added here.*
+:::
+
+1. In the **Environment Actions** panel, click **New Environment**.
+2. The New Environment drawer opens.
+3. In the **Environment Name** field, enter a name that:
+   - Starts with a lowercase letter
+   - Contains only lowercase letters, numbers, and hyphens
+   - Is 40 characters or fewer
+4. Select a **Release Stream**.
+5. Click **Create**.
+
+If the environment creation fails, an error message from the server appears. If no server message is returned, the fallback message "Failed to create environment" displays.
+
+> **Note:** The **New Environment** button is visible only to users with the `STACK_WRITE` permission.
+
+---
 
 ## Permissions
 
-| Action | Required permission |
+| Permission | What It Enables |
 |---|---|
-| View projects (listing and overview) | StackAllowedPermission — RBAC-filtered; users see only accessible projects |
-| Create a project | StackWritePermission |
-| Save as template | BlueprintTemplateWritePermission |
-| Pause or resume releases | PauseReleasesStackPermission |
-| Delete a project | StackDeletePermission |
+| `STACK_WRITE` | Create a project, save General settings, use **New Environment** |
+| `ENVIRONMENT_LAUNCH` | Launch an environment |
+| `RELEASE_FULL` | Trigger a full release |
+| `K8S_CREDENTIALS` | Renew Kubernetes credentials or download kubeconfig |
+
+---
+
+## Troubleshooting
+
+| Problem | Cause | Resolution |
+|---|---|---|
+| "Failed to load project" with a **Retry** button | Project data could not be fetched | Click **Retry** or check your network connection and permissions |
+| "Invalid Project — Project name is missing from URL" | The URL is malformed | Click **Go to Projects** to return to the Projects listing |
+| Kubeconfig download returns a 404 error | Kubernetes is not available for this environment | Verify the environment has a Kubernetes cluster configured |
+| Kubeconfig download returns a 403 error | Your account lacks the `K8S_CREDENTIALS` permission | Contact your administrator to request access |
+| **Renew** and **Download kubeconfig** are disabled | The environment is in `STOPPED`, `DESTROY_FAILED`, or `LAUNCH_FAILED` state, or has no Kubernetes cluster | Resolve the environment's current state before retrying |
+
+---
 
 ## Related Topics
 
-- [Creating a Project](./creating-a-project.md) — Step-by-step project creation
-- [Project Settings](./project-settings.md) — General settings, CI/CD, Danger Zone
-- [GitOps for Overrides](./gitops-for-overrides.md) — Git-backed blueprints and override configuration
+- [Blueprint Designer](../blueprint/designer.md) — Full visual graph editor for adding and connecting resources
+- [Creating a Project](./creating-a-project.md) — How to set up a new project from scratch
+- [Project Settings](./project-settings.md) — Configure GitOps, CI/CD, and general project metadata

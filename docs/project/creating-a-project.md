@@ -6,96 +6,89 @@ sidebar_position: 2
 
 ## Overview
 
-You create new projects from the Projects listing page using the **Create Project** drawer. Two creation modes are available: create a new project from scratch (optionally using a template), or import an existing Git repository into Facets.
+A project is the top-level organizational unit in Facets. It groups a blueprint, environments, variables, secrets, and CI/CD configuration under one named entity. You create a project through a side drawer accessible from the Projects listing page.
 
-> **Tip:** You can also create a project programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
+> **Note:** The **Create Project** button is visible only to users with the STACK_WRITE permission.
 
----
-
-## Creating a new project
+## Create a project
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-The creation flow walks you through naming your project, connecting it to version control, selecting a project type, and provisioning your first environments.
+1. From the Projects listing page, click **Create Project**.
+2. The Create Project drawer opens.
+3. In the **Project Name** field, enter a name that meets these rules:
+   - Lowercase alphanumeric characters only
+   - Must start with a letter
+   - Hyphens are allowed; spaces and uppercase letters are not
+   - Maximum 20 characters
 
-```mermaid
-flowchart TD
-    A[Open Projects listing page] -->|Click Create Project| B[Create Project drawer opens]
-    B --> C[Fill Blueprint Name and Description]
-    C --> D[Select VCS Account and Organization]
-    D --> E[Select Project Type]
-    E --> F[Add one or more Environments]
-    F --> G[Submit form]
-    G --> H{Blueprint initialised}
-    H -->|Success| I[Project created and ready]
-    H -->|Error| J[Inline validation or error message shown]
-```
-*Figure: Multi-step flow from opening the drawer to a project being ready*
+   If the name does not meet these rules, Facets shows: "Project name should be lowercase alphanumeric starting with an alphabet and can only have hyphens!"
 
-Follow these steps to create a project:
+   > **Note:** The project name cannot be changed after creation. Choose it carefully.
 
-1. Navigate to the **Projects** listing page.
-2. Click **Create Project**. The creation drawer opens on the right.
-3. Enter a **Blueprint Name**. This is the project's unique identifier and cannot be changed after creation.
-4. Enter an optional **Description** for the project.
-5. Select a **VCS Account** — a connected GitHub, GitLab, or Bitbucket account. This is required for GitOps.
-6. Select an **Organization**. The available organisations load automatically based on the VCS Account you selected.
-7. Select a **Project Type** from the list. Project types are defined in OpsCenter and determine the IaC tool (for example, Terraform) and its version. Changing the project type after creation updates these automatically.
-8. Add one or more **Environments**. For each environment:
-   - Enter an environment name. Names must start with a lowercase letter and contain only lowercase letters, numbers, and hyphens. The maximum length is 40 characters.
-   - Select a release stream.
-9. Click **Submit** to create the project.
+4. In the **Description** field, enter an optional description of the project.
+5. In the **Choose Account** field, select a VCS account — GitHub, GitLab, or Bitbucket.
+6. Enter the name of the organization, group, or workspace within the selected account. The field label changes based on the provider:
+   - GitHub: **Organization Name**
+   - GitLab: **Group Name**
+   - Bitbucket: **Workspace Name**
+7. In the **Project Type** field, select a project type. This determines the IaC tool (Terraform or OpenTofu) and other project-wide defaults.
+8. In the **Environments** field, review the initial environments. The default pre-fill is `dev` and `prod`. Add or remove environments before creating the project.
+9. Click **Create** to submit.
 
-> **Note:** At least one environment is required. The form prevents submission if the VCS Account, Blueprint Name, or Environments are missing.
+Facets creates the project, sets up the Git repository, and takes you to the new project's Overview.
 
----
+## Import from an existing Git repository
 
-## Creating a project from a template
-
-During creation, select an optional template from the **Template** field. When a template is selected, the platform clones the template blueprint into the new project at creation time.
-
-Templates appear under the **Templates** tab on the Projects listing page. Any existing project saved as a template can be used here.
-
-> **Note:** Two template systems coexist on the platform: an older system and a newer system where a project itself is marked as a template. Both are supported during project creation.
-
----
-
-## Importing an existing Git repository
+If you already have a project definition in a Git repository, you can import it instead of starting from scratch.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-Use this mode to bring an existing infrastructure repository into Facets without starting from scratch.
+1. Click **Create Project** on the Projects listing page to open the drawer.
+2. Toggle **Import Project** on.
+3. In the Git URL field, enter the full URL of the repository to import from.
+4. In the Reference field, enter the branch or tag to use.
+5. In the Relative Path field, enter the path within the repository where the project definition lives.
+6. Fill in the remaining fields as described in [Create a project](#create-a-project).
+7. Click **Create** to submit.
 
-1. Open the **Create Project** drawer as described above.
-2. Fill in **Blueprint Name**, **VCS Account**, **Organization**, and **Project Type**.
-3. Enable the **Import Project** toggle. Three additional fields appear:
-   - **Git URL** — the URL of the existing repository.
-   - **Git Reference** — the branch or tag to import from.
-   - **Relative Path** — the path within the repository where the blueprint lives.
-4. Add at least one **Environment** with a name and release stream.
-5. Click **Submit**.
+Facets clones the repository at the specified reference and path, then uses it as the blueprint source for the new project.
 
-When import is enabled, template application is skipped. The platform marks the project internally as an imported project and automatically configures GitOps to the imported repository.
+## Project types and templates
 
----
+**Project Type** governs the IaC tool (Terraform or OpenTofu) and its version. You set it at creation, and it is displayed as read-only in General settings afterward.
 
-## Troubleshooting
+If your organization has template projects, you can base a new project on a template. This clones the template's blueprint structure into the new project. Templates appear on the **Templates** tab on the Projects listing page.
 
-| Problem | Cause | Resolution |
+> **Tip:** You can also perform this operation programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
+
+## Project categories
+
+Projects in Facets fall into three categories:
+
+| Category | Description | Where it appears |
 |---|---|---|
-| VCS Account not found | The selected VCS account is not connected or is inaccessible | Verify the VCS account is connected under your account settings and try again |
-| Environment name fails validation | Name does not match the required pattern | Use lowercase letters, numbers, and hyphens only; start with a letter; keep the name between 1 and 40 characters |
-| Form cannot be submitted | Required fields are missing | Check that Blueprint Name, VCS Account, and at least one Environment are filled |
-| Projects listing shows an error | Network request failed | The platform retries up to two times automatically; if the error persists, refresh the page |
+| Regular project | Standard projects | Main Projects tab |
+| Test project | Tagged for testing custom modules | Test Projects tab |
+| Template | Reusable project configurations | Templates tab |
 
----
+Category is determined by flags set on the project type — it is not something you select during creation.
 
-## Related Topics
+## Error handling
 
-- [Project Overview](./overview.md) — What you see after entering a project
-- [Project Settings](./project-settings.md) — Edit description, project type, and advanced configuration
-- [GitOps for Overrides](./gitops-for-overrides.md) — Back your blueprint to a Git repository
+| Error | Cause | What to do |
+|---|---|---|
+| "Error loading accounts" | The VCS accounts list failed to load | Check VCS integration settings; the form remains usable for fields that loaded successfully |
+| "Error loading project types" | Project types could not be fetched | Check organization configuration and retry |
+| "Error loading organizations" | The org/group/workspace list failed to load for the selected account | Verify that the selected VCS account has access to your organization |
+| Project name validation failure | Name does not meet formatting rules | Use only lowercase letters, digits, and hyphens; start with a letter; keep it 20 characters or fewer |
+
+## Related topics
+
+- [Project Overview](./overview.md) — What you see after opening a project
+- [Project Settings](./project-settings.md) — Update description, GitOps, and CI/CD after creation
+- [Blueprint Designer](../blueprint/blueprint-designer.md) — Add and connect resources in your new project's blueprint
