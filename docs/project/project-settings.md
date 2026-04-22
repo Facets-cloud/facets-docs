@@ -20,7 +20,7 @@ The Settings sidebar contains five sections:
 
 > **Note:** Editing General Settings and GitOps requires **StackWritePermission**. Resetting CI/CD requires **ARTIFACT_CI_WRITE** permission. Deleting a project requires **StackDeletePermission**.
 
-> **Tip:** You can also manage project settings programmatically. See the [API Reference](/api-reference) for details.
+> **Tip:** You can also manage project settings programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
 
 ---
 
@@ -50,7 +50,7 @@ To edit general settings:
 
 The CI/CD settings page lets you configure the project-level CI/CD pipeline, including promotion rules and workflow definitions.
 
-Navigate to **Settings > CI/CD** to configure the pipeline. For full pipeline configuration details, see the [CI/CD documentation](../cicd/).
+Navigate to **Settings > CI/CD** to configure the pipeline. For full pipeline configuration details, see the [CI/CD documentation](../cicd/overview.md).
 
 A **Reset** option is available to revert the CI/CD configuration to its defaults. Reset requires **ARTIFACT_CI_WRITE** permission.
 
@@ -109,7 +109,7 @@ On success, Facets cleans up temporary checkout files, removes cluster resources
 | Problem | Solution |
 |---|---|
 | Deletion blocked with "All environments must be deleted before the project can be deleted." | Delete every environment under the project first, then retry deletion. |
-| Project not found — "Blueprint not found: {stackName}" | Verify the project name is correct and that you have access to it. |
+| Project not found — "Blueprint not found: `{stackName}`" | Verify the project name is correct and that you have access to it. |
 | Unauthorized action | Confirm your account has the required permission for the action. See the permissions table above. |
 | Save blocked in General Settings | Confirm that StackWritePermission is granted for your account. |
 

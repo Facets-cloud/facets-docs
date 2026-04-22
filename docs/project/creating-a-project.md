@@ -8,7 +8,7 @@ sidebar_position: 2
 
 You create new projects from the Projects listing page using the **Create Project** drawer. Two creation modes are available: create a new project from scratch (optionally using a template), or import an existing Git repository into Facets.
 
-> **Tip:** You can also create a project programmatically. See the [API Reference](/api-reference) for details.
+> **Tip:** You can also create a project programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
 
 ---
 
