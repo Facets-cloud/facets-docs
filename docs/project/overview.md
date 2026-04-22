@@ -137,6 +137,6 @@ If the environment creation fails, an error message from the server appears. If 
 
 ## Related Topics
 
-- [Blueprint Designer](../blueprint/designer.md) — Full visual graph editor for adding and connecting resources
+- **Blueprint Designer** — Full visual graph editor for adding and connecting resources
 - [Creating a Project](./creating-a-project.md) — How to set up a new project from scratch
 - [Project Settings](./project-settings.md) — Configure GitOps, CI/CD, and general project metadata

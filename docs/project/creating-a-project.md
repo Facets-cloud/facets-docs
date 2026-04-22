@@ -91,4 +91,4 @@ Category is determined by flags set on the project type — it is not something 
 
 - [Project Overview](./overview.md) — What you see after opening a project
 - [Project Settings](./project-settings.md) — Update description, GitOps, and CI/CD after creation
-- [Blueprint Designer](../blueprint/blueprint-designer.md) — Add and connect resources in your new project's blueprint
+- **Blueprint Designer** — Add and connect resources in your new project's blueprint
