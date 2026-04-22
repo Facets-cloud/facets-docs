@@ -127,7 +127,7 @@ flowchart TD
 ```
 *Figure: Sync with Git first completes a synchronous project sync, then fans out asynchronous syncs to each environment*
 
-> **Tip:** You can also perform this operation programmatically. See the [API Reference](/api-reference) for details.
+> **Tip:** You can also perform this operation programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
 
 ## Permissions
 

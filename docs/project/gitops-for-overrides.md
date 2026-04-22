@@ -16,7 +16,7 @@ Git Overrides is a secondary feature within GitOps. It points to a separate repo
 
 You can enable GitOps at project creation or at any time afterward via **Settings > GitOps**.
 
-> **Tip:** You can also perform GitOps configuration programmatically. See the [API Reference](/api-reference) for details.
+> **Tip:** You can also perform GitOps configuration programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
 
 ## Prerequisites
 
