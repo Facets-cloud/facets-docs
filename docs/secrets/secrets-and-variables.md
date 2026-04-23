@@ -62,7 +62,7 @@ flowchart LR
 
 > **Note:** Duplicate names within a project are rejected at the form level before submission. Name format is also validated client-side before the request is sent.
 
-> **Tip:** You can also perform this operation programmatically. See the [API Reference](/api-reference) for details.
+> **Tip:** You can also perform this operation programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
 
 ---
 
@@ -220,6 +220,6 @@ When fetching values across environments, the response excludes environments the
 
 ## Related Topics
 
-- [Resource Configuration](/resource-configuration) — How to use variable and secret references inside resource configuration forms and blueprint files.
-- [Environment Management](/environment-management) — Managing environments within a project and configuring environment-level settings.
-- [Launch Wizard](/launch-wizard) — The full environment launch workflow, including the Variables step where required values must be set before launch.
+- [Resource Connections](./resource-connections.md) — How to use variable and secret references inside resource configuration forms.
+- Environment Management — Managing environments within a project and configuring environment-level settings.
+- Launch Wizard — The full environment launch workflow, including the Variables step where required values must be set before launch.
