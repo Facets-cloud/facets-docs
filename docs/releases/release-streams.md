@@ -6,7 +6,7 @@ sidebar_position: 6
 
 # Release Streams
 
-Release Streams are named pipelines that categorize how releases flow through environments in your organization. They are configured at the organization level and are then associated with environments to control promotion and deployment routing.
+Release Streams are named pipelines that categorize how releases flow through environments in your organization. They are configured at the organization level and associated with environments to control promotion and deployment routing.
 
 ![Release Streams](../../static/img/releases/release-streams.png)
 
@@ -22,7 +22,7 @@ The Release Streams table lists all streams — both system-defined and custom �
 | **Type** | Whether the stream is system-defined or custom |
 | **Production** | Indicates whether the stream is marked as a production stream |
 | **Environments** | Environments currently associated with this stream |
-| **Created** | When and by whom the stream was created |
+| **Created** | When the stream was created |
 
 ## Creating a Release Stream
 
@@ -33,33 +33,31 @@ The Release Streams table lists all streams — both system-defined and custom �
 1. Navigate to **Settings > Release Streams**.
 2. Click **Create Release Stream**.
 3. Fill in the form:
-   - **Release Stream Name** — required. Must be 2–10 characters with no leading or trailing whitespace.
-   - **Description** — optional. A short description of the stream's purpose.
-   - **Production** — optional toggle, default off. Enable this to mark the stream as a production stream.
+   - **Release Stream Name** — Required. Must be 2–10 characters with no leading or trailing whitespace.
+   - **Description** — Optional. A short description of the stream's purpose.
+   - **Production** — Optional toggle, default off. Enable this to mark the stream as a production stream.
 4. Click **Create** to save the release stream.
 
 > **Note:** Release stream names must be unique within the organization. Submitting a duplicate name returns an error — choose a different name and try again.
 
-> **Note:** You need the `RELEASE_STREAM_WRITE` permission to create a release stream.
+> **Tip:** You can also manage release streams programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
 
 ## Deleting a Release Stream
 
-Click the delete action on a custom release stream row to remove it.
+> **Warning:** Deleting a release stream is permanent. Environments associated with the stream may need to be reassigned after deletion.
 
-> **Warning:** Deleting a release stream is permanent. Associated environments may need to be reassigned to a different stream after deletion.
+1. Navigate to **Settings > Release Streams**.
+2. Locate the custom release stream you want to delete.
+3. Click the delete action on the stream row.
 
 System-defined release streams cannot be deleted. Their delete action is disabled with the tooltip "System defined release streams cannot be deleted."
-
-You need the `RELEASE_STREAM_DELETE` permission to delete a release stream.
 
 ## Permissions
 
 | Permission | Action |
 |---|---|
-| `RELEASE_STREAM_WRITE` | Create a release stream |
-| `RELEASE_STREAM_DELETE` | Delete a release stream |
-
-> **Tip:** You can also manage release streams programmatically. See the [API Reference](https://apidocs.facets.cloud) for details.
+| RELEASE_STREAM_WRITE | Create a release stream |
+| RELEASE_STREAM_DELETE | Delete a release stream |
 
 ## Troubleshooting
 

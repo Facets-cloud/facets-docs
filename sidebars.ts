@@ -93,9 +93,11 @@ const sidebars: SidebarsConfig = {
       items: [
         'releases/overview',
         'releases/performing-releases',
-        'releases/parallel-releases',
         'releases/approval-workflow',
-        'releases/canary-release',
+        'releases/release-history',
+        'releases/parallel-releases',
+        'releases/release-streams',
+        'releases/delivery-pipeline',
       ],
     },
     {
