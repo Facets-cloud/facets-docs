@@ -6,7 +6,7 @@ sidebar_position: 2
 
 # Performing Releases
 
-The Environment Releases page is where you trigger all release types for an environment. Every release follows a two-step flow: Step 1 selects options and Step 2 reviews and confirms before submission.
+The Environment Releases page is where you trigger every release action for an environment. Release configuration follows a two-step flow: Step 1 selects the release type and options, Step 2 reviews the configuration and confirms.
 
 ![Performing Releases](../../static/img/releases/performing-releases.png)
 
@@ -18,26 +18,28 @@ A Full Release performs a full sync of all builds and blueprint definitions for 
 *An interactive walkthrough for this flow will be added here.*
 :::
 
+**Required permission:** `RELEASE_FULL`. If you enable destructive operations, `RELEASE_FULL_ALLOW_DESTROY` is also required.
+
 1. Navigate to the Environment Releases page for your environment.
 2. Click **Release**.
 3. In Step 1, select **Full Release** as the release type.
 4. Configure the available options:
    - **withRefresh** — refreshes builds before applying.
    - **forceRelease** — forces the release to run even if no changes are detected.
-   - **allowDestruct** — permits destructive operations. Requires the `RELEASE_FULL_ALLOW_DESTROY` permission in addition to `RELEASE_FULL`.
+   - **allowDestruct** — enables destructive operations. Only enable this when you intend to delete or replace resources.
 5. Add an optional comment to describe the release.
 6. Click through to Step 2 to review your selections.
 7. Confirm to submit the release.
 
-> **Note:** Triggering a Full Release requires the `RELEASE_FULL` permission. If you enable **allowDestruct**, the `RELEASE_FULL_ALLOW_DESTROY` permission is also required.
-
 ## Triggering a Selective Release
 
-A Selective Release targets specific resources rather than the entire environment. This is useful when you want to apply changes to a subset of resources without a full sync.
+A Selective Release targets specific resources rather than the entire environment. Use this when you want to apply changes to a subset of resources without a full sync.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
 :::
+
+**Required permission:** `RELEASE_SELECTIVE`. If you enable destructive operations, `RELEASE_SELECTIVE_ALLOW_DESTROY` is also required.
 
 1. Click **Release** on the Environment Releases page.
 2. In Step 1, select **Selective Release** as the release type.
@@ -48,9 +50,7 @@ A Selective Release targets specific resources rather than the entire environmen
 7. Click through to Step 2 to review your selections.
 8. Confirm to submit the release.
 
-> **Note:** Triggering a Selective Release requires the `RELEASE_SELECTIVE` permission. Enabling **allowDestruct** additionally requires `RELEASE_SELECTIVE_ALLOW_DESTROY`.
-
-> **Tip:** You can navigate directly into a Selective Release pre-selecting a specific resource using the URL parameter `?action=release&resource=type/name`. This deep-link is used by the Resource Configuration page's **Release Now** action.
+> **Tip:** You can navigate directly into a Selective Release with a specific resource pre-selected using the URL parameter `?action=release&resource=type/name`. This deep-link is used by the Resource Configuration page's **Release Now** action.
 
 ## Triggering a Custom Release
 
@@ -60,17 +60,17 @@ A Custom Release lets you enter custom Terraform commands to run against the env
 *An interactive walkthrough for this flow will be added here.*
 :::
 
+**Required permission:** `RELEASE_CUSTOM`. If the commands include destructive operations, `RELEASE_CUSTOM_ALLOW_DESTROY` is also required.
+
 1. Click **Release** on the Environment Releases page.
 2. In Step 1, select **Custom Release** as the release type.
 3. Enter your custom Terraform commands in the input field.
 4. Click through to Step 2 to review.
 5. Confirm to submit the release.
 
-> **Note:** Triggering a Custom Release requires the `RELEASE_CUSTOM` permission. If the commands include destructive operations, `RELEASE_CUSTOM_ALLOW_DESTROY` is also required.
-
 ## Plan and apply workflow
 
-Plans are dry-run releases — they generate a Terraform plan without applying any infrastructure changes. Use a plan to review what will change before committing.
+Plans are dry-run releases. A plan generates a Terraform plan showing what changes would be applied — without making any changes to infrastructure. After reviewing the plan output, you apply it in a separate step.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
@@ -83,25 +83,25 @@ flowchart TD
     C --> D[Full Plan]
     C --> E[Selective Plan]
     C --> F[Rollback Plan]
-    D --> G[Plan runs — review output]
+    D --> G[Plan runs — no changes applied]
     E --> G
     F --> G
     G --> H{Proceed?}
     H -->|Yes| I[Trigger Apply Plan]
-    H -->|No| J[Discard — no changes applied]
+    H -->|No| J[Discard — no changes made]
     I --> K[Changes applied to environment]
 ```
-*Figure: Plan/Apply lifecycle for Full, Selective, and Rollback variants*
+*Figure: Plan/Apply lifecycle for Full, Selective, and Rollback variants — a plan must succeed before the corresponding Apply action becomes available*
+
+**Required permissions:** `RELEASE_PLAN` to create a plan; `RELEASE_APPLY_PLAN` to apply it.
 
 ### Creating a plan
 
 1. Click **Release** and select the plan type: **Full Plan**, **Selective Plan**, or **Rollback Plan**.
 2. Configure any applicable options (resource selection for Selective Plan).
 3. Confirm in Step 2 to submit the plan.
-4. The plan runs and records a `FULL PLAN`, `SELECTIVE PLAN`, or `ROLLBACK PLAN` entry in the release history.
-5. Open the release entry to review the Terraform plan output.
-
-> **Note:** Creating a plan requires the `RELEASE_PLAN` permission.
+4. The plan runs and records a FULL PLAN, SELECTIVE PLAN, or ROLLBACK PLAN entry in the release history.
+5. Open the release entry to review the Terraform plan output in **Release Details**.
 
 ### Applying a plan
 
@@ -111,9 +111,7 @@ After a plan succeeds, trigger the corresponding apply to execute those changes:
 - **Apply Selective Plan** — applies a previously created Selective Plan.
 - **Apply Rollback Plan** — applies a previously created Rollback Plan.
 
-> **Note:** Applying a plan requires the `RELEASE_APPLY_PLAN` permission.
-
-> **Tip:** You can also trigger an Apply Plan from the Release Details drawer of the completed plan entry. See Release History for details.
+> **Note:** Apply actions only appear after the corresponding plan has run successfully. You can also trigger an Apply Plan from the **Release Details** drawer of the completed plan entry.
 
 ## Rollback
 
@@ -123,8 +121,9 @@ After a plan succeeds, trigger the corresponding apply to execute those changes:
 
 1. Click **Release** and select **Rollback Plan** to create a rollback plan.
 2. Confirm in Step 2 to submit the plan.
-3. Open the resulting release entry in release history to review the rollback plan output.
-4. Trigger **Apply Rollback Plan** to apply the rollback.
+3. Open the resulting release entry in Release History to review the rollback plan output in **Release Details**.
+4. Click **Apply Rollback Plan** to apply the rollback.
+5. Confirm to proceed.
 
 > **Warning:** Applying a rollback reverses infrastructure changes. Review the rollback plan output carefully before applying.
 
@@ -136,10 +135,12 @@ The **Launch** action provisions cloud infrastructure for an environment for the
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-1. Click **Launch** on the Environment Releases page.
-2. Confirm the launch in the dialog.
+**Required permission:** `ENVIRONMENT_LAUNCH`.
 
-> **Note:** **Launch** is only available when the environment has not yet been provisioned. It requires the `ENVIRONMENT_LAUNCH` permission.
+1. Click **Launch** on the Environment Releases page.
+2. Confirm the launch when prompted.
+
+> **Note:** **Launch** is only available when the environment has not yet been provisioned.
 
 ## Destroy an environment
 
@@ -149,15 +150,15 @@ The **Destroy** action tears down all cloud infrastructure for the environment.
 *An interactive walkthrough for this flow will be added here.*
 :::
 
+> **Warning:** Destroying an environment is irreversible. All cloud infrastructure for the environment is permanently removed. This action requires the `ENVIRONMENT_DESTROY` permission.
+
 1. Click **Destroy** on the Environment Releases page.
 2. Read the confirmation prompt carefully.
 3. Confirm to proceed.
 
-> **Warning:** Destroying an environment is irreversible. All cloud infrastructure for the environment is permanently removed. This action requires the `ENVIRONMENT_DESTROY` permission.
-
 ## Scale up and scale down
 
-Scale operations let you adjust the running state of deployments, statefulsets, and cronjobs in an environment without a full release.
+Scale operations adjust the running state of deployments, statefulsets, and cronjobs without a full release. Scale Down and Scale Up are independent operations — Scale Up does not reverse a Scale Down.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
@@ -166,7 +167,7 @@ Scale operations let you adjust the running state of deployments, statefulsets, 
 - Click **Scale up** to scale up deployments and statefulsets and re-enable cronjobs in the environment.
 - Click **Scale down** to scale down deployments and statefulsets and disable cronjobs in the environment.
 
-> **Note:** Scale Down and Scale Up are independent operations — Scale Up does not simply reverse a Scale Down. Scale Down is not available in dependent environments. **Scale up** requires `RELEASE_SCALE_UP`; **Scale down** requires `RELEASE_SCALE_DOWN`.
+> **Note:** Scale Down is not available in dependent environments. **Scale up** requires `RELEASE_SCALE_UP`; **Scale down** requires `RELEASE_SCALE_DOWN`.
 
 ## Pause and resume releases
 
@@ -176,14 +177,14 @@ Pausing releases blocks all further deployments for the environment until you ex
 *An interactive walkthrough for this flow will be added here.*
 :::
 
+**Required permission:** `RELEASE_PAUSE`.
+
 1. Click **Pause releases** to halt all deployments for the environment.
 2. Click **Resume releases** to lift the pause and allow deployments to proceed again.
 
-> **Note:** Pausing and resuming releases requires the `RELEASE_PAUSE` permission.
-
 ## Unlock Terraform state
 
-Click **Unlock State** when the Terraform state file is locked and releases are blocked.
+Click **Unlock State** when the Terraform state file is locked and releases are blocked. This typically occurs when a previous release was interrupted before it could release the lock.
 
 > **Warning:** Only unlock the state when no release is actively running. Unlocking an in-progress release can corrupt the Terraform state file.
 
@@ -191,17 +192,19 @@ Click **Unlock State** when the Terraform state file is locked and releases are 
 
 Click **Export Terraform** to generate Terraform source files for the environment.
 
-> **Note:** The **Export Terraform** feature must be enabled in General Settings before the button becomes active. If it is disabled, the button is greyed out with the tooltip: "Terraform export is currently disabled. Enable it from General Settings to export Terraform." This action requires the `RELEASE_TERRAFORM_EXPORT` permission.
+**Required permission:** `RELEASE_TERRAFORM_EXPORT`.
+
+> **Note:** The **Export Terraform** feature must be enabled in General Settings before the button becomes active. If it is disabled, the button is greyed out with the tooltip: "Terraform export is currently disabled. Enable it from General Settings to export Terraform."
 
 ## Update IaC version
 
 Click **Update IaC Version** or **Set IaC Version** to change the Infrastructure-as-Code version for the environment.
 
-> **Note:** This action requires the `ENVIRONMENT_CONFIGURE` permission.
+**Required permission:** `ENVIRONMENT_CONFIGURE`.
 
 ## Release schedule
 
-You can configure a recurring release schedule per environment so that releases fire automatically on a cron-based schedule.
+You can configure a recurring release schedule per environment so that releases fire automatically on a cron-based schedule. Schedules are persisted per environment per release type and survive server restarts.
 
 :::info Interactive Demo
 *An interactive walkthrough for this flow will be added here.*
@@ -209,20 +212,27 @@ You can configure a recurring release schedule per environment so that releases 
 
 ```mermaid
 flowchart TD
-    A[User enters cron expression] --> B[Schedule persisted per environment per release type]
-    B --> C[Server startup]
-    C --> D[All schedules re-registered automatically]
-    D --> E[Cron fires at scheduled time]
-    E --> F[Release triggered automatically for environment]
+    A[User enters cron expression] --> B[Schedule saved per environment and release type]
+    B --> C[Server startup re-registers all persisted schedules]
+    C --> D[Cron fires at scheduled time]
+    D --> E[Release triggered automatically for environment]
+    E --> D
 ```
-*Figure: How a scheduled release is registered and fires automatically*
+*Figure: Scheduled release lifecycle — schedules survive server restarts and fire automatically on each cron interval*
+
+**Required permission:** `ENVIRONMENT_CONFIGURE`.
+
+### To set a release schedule
 
 1. Click **Release Schedule** on the Environment Releases page.
 2. Enter a valid cron expression to define the recurring schedule.
 3. Save the schedule.
-4. To delete a schedule, open the **Release Schedule** dialog again and remove the existing entry.
 
-> **Note:** Schedules are persisted per environment per release type and survive server restarts. Configuring a release schedule requires the `ENVIRONMENT_CONFIGURE` permission.
+### To delete a release schedule
+
+1. Click **Release Schedule** to open the schedule configuration.
+2. Delete the existing schedule entry.
+3. Save to remove the schedule.
 
 ## Release preview
 
@@ -241,8 +251,8 @@ Run pre-release checks to identify issues in the environment's blueprint and ove
 
 | Category | Description |
 |---|---|
-| Syntax Error | Malformed blueprint syntax |
-| GuardRails Compliance Issues | Policy violations detected by guardrails |
+| Syntax Error | Malformed blueprint syntax — **blocks release** |
+| GuardRails Compliance Issues | Policy violations detected by guardrails — **blocks release** |
 | Invalid Reference Expression | Expression references that cannot be resolved |
 | Schema Compliance Error | Blueprint does not conform to the expected schema |
 | Overrides Syntax Error | Malformed override syntax |
@@ -251,10 +261,11 @@ Run pre-release checks to identify issues in the environment's blueprint and ove
 | Invalid Filename Error | Filenames that do not meet naming requirements |
 
 3. Filter results by severity using the **Error** or **Warning** filter.
+4. Resolve any blocking errors before triggering a release.
 
-> **Warning:** Validations in the **Syntax Error** and **GuardRails Compliance Issues** categories are classified as severe and block the release from proceeding. Resolve these before triggering a release.
+> **Warning:** Validations in the **Syntax Error** and **GuardRails Compliance Issues** categories are severe and block the release from proceeding.
 
-> **Note:** If a release is submitted and fails validation, its status is recorded as `Invalid` in the release history. Click the **Invalid** tag to view the validation error details.
+> **Note:** If a release is submitted and fails validation before execution, its status is recorded as Invalid in the release history. Click the Invalid tag to view the validation error details.
 
 ## Permissions reference
 
@@ -282,7 +293,7 @@ Run pre-release checks to identify issues in the environment's blueprint and ove
 
 | Problem | Solution |
 |---|---|
-| "Failed maintenance release is blocking all subsequent releases" banner | A maintenance release failed. Raise a support ticket with the support team to resolve the blocking state. |
+| "Failed maintenance release is blocking all subsequent releases" banner appears | A maintenance release failed. Raise a support ticket with the support team to resolve the blocking state. |
 | **Export Terraform** button is greyed out | Terraform Export is disabled. Enable it in General Settings. |
 | **Scale down** button is disabled | The environment is a dependent environment. Scale Down is not permitted in dependent environments. |
 | Permission error when triggering a release | Verify that your role includes the required permission — for example, `RELEASE_FULL` for a Full Release. |

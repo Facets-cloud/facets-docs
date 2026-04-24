@@ -6,18 +6,18 @@ sidebar_position: 7
 
 # Delivery Pipeline
 
-The Delivery Pipeline gives you a visual view of environment promotion order for a project. It shows the sequence in which releases propagate across environments — for example, from a development environment through staging to production. Access it from project-level navigation.
+The Delivery Pipeline page shows a visual tree graph of environment promotion order for a project. It represents the sequence in which releases propagate across environments — for example, from a development environment through staging to production. Access it from the project-level navigation.
 
 ## Viewing the delivery pipeline
 
-The pipeline displays as a visual tree. Each node in the tree represents an environment. Directional connections between nodes indicate the promotion sequence — releases flow from parent environments to child environments in the order defined.
+The pipeline displays as a visual tree. Each node in the tree represents an environment. Directional connections between nodes indicate the promotion sequence — releases flow from parent environments toward child environments in the defined order.
 
 The view is read-only by default. You must activate edit mode to make any changes.
 
 ```mermaid
 graph LR
     Dev[Development] -->|promotes to| Staging[Staging]
-    Staging -->|promotes to| Prod[Production]
+    Staging[Staging] -->|promotes to| Prod[Production]
 ```
 *Figure: Example delivery pipeline showing environment nodes connected in promotion order*
 
@@ -27,11 +27,11 @@ graph LR
 *An interactive walkthrough for this flow will be added here.*
 :::
 
-1. Open the Delivery Pipeline page from the project-level navigation.
+1. Open the **Delivery Pipeline** page from the project-level navigation.
 2. Click the edit mode toggle to enter edit mode.
 3. Drag environment nodes to reorder their position in the pipeline tree.
 4. Configure transition settings per environment as needed.
-5. Click **Save** to persist the updated pipeline order.
+5. Click **Save** to persist the updated pipeline order to the platform.
 
 > **Note:** Changes are held in memory until you explicitly save. To discard changes, exit edit mode without clicking **Save**.
 
