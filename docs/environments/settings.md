@@ -19,6 +19,8 @@ Settings are organized in a sidebar with hash-based navigation. Not all sections
 - VPN Configuration (legacy project types only)
 - Danger Zone
 
+![Environment Settings](../../static/img/environment/settings.png)
+
 > **Note:** The **Environment Type**, **Release Management**, and **Kubernetes Config** sections are only visible after the environment has been configured (launched at least once).
 
 ## General Settings

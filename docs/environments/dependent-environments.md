@@ -8,6 +8,8 @@ sidebar_position: 7
 
 Dependent environments model a promotion pipeline inside a project. A base (parent) environment must be signed off before releases flow to its child (dependent) environments. This lets teams gate deployments through a controlled sequence — for example, requiring a development environment to be verified before staging receives a release.
 
+![Dependent Environments](../../static/img/environment/dependent-environments.png)
+
 ## What Are Dependent Environments
 
 A dependent environment is linked to a parent environment within the same project. Releases do not flow to a dependent environment automatically. They wait until the parent environment's release is signed off, either by a user or on an automated schedule.

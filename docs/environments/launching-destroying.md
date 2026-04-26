@@ -8,6 +8,8 @@ sidebar_position: 3
 
 Facets separates environment lifecycle into two distinct operations: **Launch** provisions infrastructure for the first time, and **Destroy** tears down all infrastructure while preserving the environment configuration. A separate **Delete** action permanently removes the environment record.
 
+![Launching and Destroying Environments](../../static/img/environment/launching-destroying.png)
+
 ## Creating an Environment
 
 :::info Interactive Demo

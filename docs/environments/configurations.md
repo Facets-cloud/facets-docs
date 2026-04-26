@@ -8,6 +8,8 @@ sidebar_position: 2
 
 The Environment Overview page is the main dashboard for a running environment. It consolidates health, alerts, releases, ingress, services, IaC Git sync status, and recent activity into a single view. When an environment has never been launched, the page shows an empty state with a **Launch environment** call to action.
 
+![Environment Configurations](../../static/img/environment/configurations.png)
+
 ## Overview Dashboard
 
 The Overview dashboard is accessible at `/projects/:projectName/environments/:clusterId/overview`. It presents several information cards that give a complete picture of the environment's current state.
