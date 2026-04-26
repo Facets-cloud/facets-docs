@@ -8,6 +8,8 @@ sidebar_position: 5
 
 The blueprint defines resources at the project level — it is the shared source of truth for all environments in a project. Resource overrides let you customize those resource configurations for a specific environment without altering the shared blueprint. Each override is applied on top of the blueprint base at release time to produce the effective configuration that Facets deploys.
 
+![Overriding Resources in an Environment](../../static/img/environment/overriding-resources.png)
+
 ## How Resource Overrides Work
 
 The blueprint holds the base (default) configuration for every resource in the project. An override is a set of field values that apply only when deploying that resource to a specific environment.

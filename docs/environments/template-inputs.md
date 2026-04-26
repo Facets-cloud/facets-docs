@@ -12,6 +12,8 @@ Think of template inputs as the equivalent of Terraform input variables: the blu
 
 Template inputs are accessed at: `/projects/:projectName/environments/:clusterId/template-inputs`
 
+![Template Inputs](../../static/img/environment/template-inputs.png)
+
 ## What Are Template Inputs
 
 A blueprint defines resources at the project level and is shared across all environments in a project. Template inputs extend that model by allowing the blueprint designer to expose named parameters — such as instance sizes, region identifiers, replica counts, or feature flags — that must be filled in per environment.

@@ -4,6 +4,8 @@ title: Environment Overview
 sidebar_position: 1
 ---
 
+![Environment Overview](../../static/img/environment/overview.png)
+
 ## What is an Environment
 
 An environment is a deployed instance of a project's blueprint onto a cloud account or Kubernetes cluster. Each project can have multiple environments — such as development, staging, and production — that share the same resource definitions but run independently with their own infrastructure, configuration, and lifecycle.
