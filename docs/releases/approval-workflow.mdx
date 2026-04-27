@@ -1,0 +1,54 @@
+---
+id: approval-workflow
+title: Release Approval Workflow
+sidebar_position: 3
+---
+
+import StorylaneTour from '@site/src/components/StorylaneTour';
+
+{/* <StorylaneTour id="abc123" /> */}
+
+# Release Approval Workflow
+
+Some releases require explicit approval before execution proceeds. When a release is waiting for a decision, it appears with status **Pending Approval** in the Release History table and in the **Active Releases** card. No deployment actions run until an approver acts on the release.
+
+![Release Approval Workflow](../../static/img/releases/approval-workflow.png)
+
+## Approving or rejecting a release
+
+:::info Interactive Demo
+*An interactive walkthrough for this flow will be added here.*
+:::
+
+Use this flow when a release is blocked at **Pending Approval** status and you need to allow or cancel it.
+
+1. Open the Environment Releases page for the target environment.
+2. Locate the release with status **Pending Approval** in the Release History table.
+3. Click the release row to open the **Release Details** drawer.
+4. Review the deployment information shown in the drawer — triggered by, release type, IaC version, and associated changes.
+5. To allow the release to proceed, click **Approve**. Execution continues and the history table shows an **Approved** badge on that entry.
+6. To cancel the release, click **Reject**. The release is recorded with status **Rejected** and does not execute.
+
+> **Note:** Only users with the appropriate approval permission can approve or reject a release. If the **Approve** and **Reject** actions are not visible, contact your administrator to review your role permissions.
+
+## Signing off on a release
+
+Sign-off is a separate action from approval. It records that a designated user has reviewed the release — independently of whether the release was approved or executed.
+
+:::info Interactive Demo
+*An interactive walkthrough for this flow will be added here.*
+:::
+
+To sign off on a release:
+
+1. Open the **Release Details** drawer for the release you want to sign off on.
+2. Click the sign-off action in the drawer.
+3. To review what changed between the current state and the previously signed-off version, click **Compare with signed-off version**.
+
+> **Note:** Sign-off is recorded for audit and review purposes. It does not block or unblock release execution.
+
+## Related Topics
+
+- [Performing Releases](./performing-releases.md) - How to trigger any release type
+- [Release History](./release-history.md) - Viewing past releases and their statuses
+- [Releases Overview](./overview.md) - How releases work in Facets
