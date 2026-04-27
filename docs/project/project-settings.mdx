@@ -1,0 +1,118 @@
+---
+id: project-settings
+title: Project Settings
+sidebar_position: 4
+---
+
+import StorylaneTour from '@site/src/components/StorylaneTour';
+
+{/* <StorylaneTour id="abc123" /> */}
+
+# Project Settings
+
+Project Settings give you control over the core configuration of a project. Access settings from the project sidebar. The sidebar contains five sections: **General**, **GitOps**, **CI/CD**, **Delivery Pipeline**, and **Danger Zone**. All settings are scoped to the current project and require appropriate permissions to modify.
+
+---
+
+## General settings
+
+General settings let you update the project type and description. The project name is locked after creation and cannot be changed.
+
+:::info Interactive Demo
+*An interactive walkthrough for this flow will be added here.*
+:::
+
+To edit general settings:
+
+1. Open your project and click **Settings** in the project sidebar.
+2. Select **General**.
+3. Update any of the following editable fields:
+   - **Project Type** — The IaC tool and version associated with the project. Changing this updates the tool inherited by the project.
+   - **Description** — A free-text description of the project.
+4. Review the following read-only fields:
+   - **Project Name** — Locked after creation and displayed with a lock icon. This cannot be changed.
+   - **IaC Tool** — Inherited from the selected Project Type (Terraform or OpenTofu). This is read-only per project. The OpenTofu version field appears only when the project type uses OpenTofu.
+5. Click **Save** to apply your changes.
+
+> **Note:** Saving General settings requires the **STACK_WRITE** permission. If you lack this permission, the save action shows: "You do not have permission to modify project settings."
+
+> **Note:** If the project fails to load, an **Error Loading Project** alert displays the server error message.
+
+---
+
+## GitOps settings
+
+The **GitOps** section connects the project to a Git repository for blueprint and override management.
+
+Navigate to **Settings** > **GitOps** to configure the VCS repository, branch, relative path, and override settings.
+
+For full configuration steps, see [GitOps for Overrides](./gitops-for-overrides.md).
+
+---
+
+## CI/CD settings
+
+The **CI/CD** section lets you view, configure, or reset the project-level CI/CD rules and promotion workflows.
+
+Navigate to **Settings** > **CI/CD** to configure the pipeline.
+
+Key behaviors:
+
+- A 404 response from the server is treated as "not yet configured" — the section shows an empty state with an option to configure. This is not an error.
+- The **Reset** option removes all CI rules and workflow IDs from the project.
+
+> **Warning:** Resetting CI/CD configuration removes all CI rules and workflow IDs from the project. This action requires the **ARTIFACT_CI_WRITE** permission and cannot be undone.
+
+For full CI/CD pipeline configuration details, see the CI/CD documentation.
+
+---
+
+## Delivery Pipeline
+
+The **Delivery Pipeline** section configures staged rollouts across environments within a project.
+
+Navigate to **Settings** > **Delivery Pipeline** to view and configure the promotion sequence. Detailed coverage is in the Delivery Pipeline documentation.
+
+---
+
+## Deleting a project
+
+Deleting a project permanently removes all configuration, variables, GitOps settings, and deployment history. This action cannot be undone.
+
+> **Warning:** Deletion is permanent and irreversible. All project configuration, variables, GitOps settings, and deployment history are removed.
+
+:::info Interactive Demo
+*An interactive walkthrough for this flow will be added here.*
+:::
+
+To delete a project:
+
+1. Open your project and click **Settings** in the project sidebar.
+2. Select **Danger Zone**.
+3. Click **Delete Project**.
+4. A confirmation modal appears with the message: "This action will permanently delete the project ... and cannot be undone."
+5. Type `confirm` (lowercase, exactly as shown) in the confirmation field.
+6. Click the delete button to proceed.
+
+> **Note:** If the deletion fails, the modal stays open. Do not dismiss it — check for error messages and retry.
+
+---
+
+## Permissions
+
+| Action | Required permission |
+|---|---|
+| Save General settings | STACK_WRITE |
+| Create environments | STACK_WRITE |
+| Reset CI/CD configuration | ARTIFACT_CI_WRITE |
+| Delete project | Admin-level action (enforced on the backend) |
+
+> **Note:** The **Delete Project** action has no explicit frontend permission check beyond the confirmation phrase. Access is enforced as an admin-level action on the backend.
+
+---
+
+## Related Topics
+
+- [GitOps for Overrides](./gitops-for-overrides.md) — Full GitOps configuration walkthrough
+- [Project Overview](./overview.md) — The main project dashboard
+- [Creating a Project](./creating-a-project.md) — Initial project setup
